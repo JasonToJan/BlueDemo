@@ -18,7 +18,7 @@ android {
         }
     }
 
-    dataBinding{
+    dataBinding {
         enabled true
     }
 }
@@ -33,4 +33,5 @@ dependencies {
 
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.47'
+    implementation 'com.cxz:swipeback:1.0.1'//滑动返回
 }

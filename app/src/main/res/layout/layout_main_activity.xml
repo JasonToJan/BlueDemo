@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
+
+            <Button
+                android:id="@+id/lma_test_api_tv"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:textColor="@color/colorPrimary"
+                android:layout_margin="10dp"
+                android:text="测试基本API"
+                android:textSize="20sp"
+                android:gravity="center" />
+
+
+            <Button
+                android:id="@+id/lma_normal_blue_tv"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textColor="@color/colorPrimary"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_margin="10dp"
+                android:text="经典蓝牙demo"
+                android:textSize="20sp"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/lma_ble_blue_tv"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textColor="@color/colorPrimary"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_margin="10dp"
+                android:text="BLE蓝牙demo"
+                android:textSize="20sp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ui.TestAPIActivity">
+
+            <Button
+                android:id="@+id/ltaa_open_blue_btn1"
+                android:text="使用\nIntent(BluetoothAdapter.ACTION_REQUEST_ENABLE)\n打开蓝牙"
+                android:layout_margin="10dp"
+                android:textAllCaps="false"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/ltaa_open_blue_btn2"
+                android:text="使用mBluetoothAdapter.enable() 强行打开"
+                android:layout_margin="10dp"
+                android:textAllCaps="false"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/ltaa_open_test_btn2"
+                android:text="设置自身能被其他设备检测到 通过intent开启"
+                android:textAllCaps="false"
+                android:layout_margin="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/ltaa_show_message_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="展示当前设备的蓝牙信息："
+                android:layout_margin="@dimen/dp_10"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <TextView
+                android:id="@+id/ltaa_show_paired_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="展示已经配对的蓝牙设备："
+                android:layout_gravity="center_horizontal"
+                />
+
+            <Button
+                android:id="@+id/ltaa_search_blue_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="搜索蓝牙设备（确保自身蓝牙已打开）" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ltaa_show_list_rv"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

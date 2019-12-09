@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        tools:context=".ui.NormalBlueActivity">
+
+        <TextView
+            android:id="@+id/anb_describe_tv"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:text="普通蓝牙"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/anb_client_btn"
+            android:text="点击进入普通蓝牙的客户端"
+            android:layout_margin="20dp"
+            android:background="#CCEEE8E8"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"/>
+
+        <Button
+            android:id="@+id/anb_server_btn"
+            android:text="点击进入普通蓝牙的服务端"
+            android:layout_margin="20dp"
+            android:background="#CCEEE8E8"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"/>
+
+    </LinearLayout>
+
+</layout>
