@@ -1,22 +1,9 @@
 package androidalldemo.jan.jason.bluedemo.ui;
 
-import androidalldemo.jan.jason.bluedemo.App;
-import androidalldemo.jan.jason.bluedemo.R;
-import androidalldemo.jan.jason.bluedemo.adapter.BlueConnectAdapter;
-import androidalldemo.jan.jason.bluedemo.bean.BlueBean;
-import androidalldemo.jan.jason.bluedemo.databinding.LayoutTestApiActivityBinding;
-import androidalldemo.jan.jason.bluedemo.utils.BlueUtils;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,13 +18,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cxz.swipelibrary.SwipeBackActivity;
 
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
+
+import androidalldemo.jan.jason.bluedemo.R;
+import androidalldemo.jan.jason.bluedemo.adapter.BlueConnectAdapter;
+import androidalldemo.jan.jason.bluedemo.bean.BlueBean;
+import androidalldemo.jan.jason.bluedemo.databinding.LayoutTestApiActivityBinding;
+import androidalldemo.jan.jason.bluedemo.utils.BlueUtils;
+import androidalldemo.jan.jason.bluedemo.utils.ToastUtils;
 
 public class TestAPIActivity extends SwipeBackActivity implements View.OnClickListener{
 
@@ -47,7 +46,6 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
     private static final int REQUEST_ENABLE = 1;
 
     private BlueConnectAdapter adapter;
-    private ArrayList<BlueBean> blueDatas = new ArrayList<>();
     private LayoutTestApiActivityBinding binding;
 
     //连接时需要用的类
@@ -171,7 +169,7 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
      * 初始化配置列表
      */
     private void initRecyclerView() {
-        adapter = new BlueConnectAdapter(blueDatas);
+        adapter = new BlueConnectAdapter();
 
         binding.ltaaShowListRv.setLayoutManager(new LinearLayoutManager(this));
         binding.ltaaShowListRv.setAdapter(adapter);
@@ -328,35 +326,34 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
             switch (action) {
                 case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
                     Log.d("TEST##","begin to discovery");
-                    blueDatas.clear();
+                    if (adapter != null && adapter.getData() != null) {
+                        adapter.getData().clear();
+                    }
                     break;
 
                 case BluetoothDevice.ACTION_FOUND:
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    // 判断是否配对过
+                    BlueBean bean = new BlueBean(device.getName(), device.getAddress(), device.getBondState());
                     if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                        // 添加到列表
-                        blueDatas.add(new BlueBean(device.getName(), device.getAddress()));
+                        adapter.addData(bean);//适配器
+                    } else {
+                        adapter.addData(0,bean);//适配器
                     }
                     break;
 
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
-
-                    //replaceData
-                    if (adapter != null) {
-                        adapter.replaceData(blueDatas);
-                    }
+                    ToastUtils.show("已完成蓝牙搜索任务");
 
                     break;
 
                 case BluetoothDevice.ACTION_ACL_CONNECTED:
-                    App.toast("蓝牙已经连接了",true);
+                    ToastUtils.show("蓝牙已经连接了");
                     //重置配对蓝牙设备
                     refreshPairedDevices();
                     break;
 
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                    App.toast("蓝牙断开连接了",true);
+                    ToastUtils.show("蓝牙断开连接了");
                     refreshPairedDevices();
                     break;
             }

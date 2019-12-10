@@ -1,18 +1,22 @@
 package androidalldemo.jan.jason.bluedemo.utils;
 
+
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
+import androidalldemo.jan.jason.bluedemo.BuildConfig;
+
 
 public class LogUtils {
 
-    private static String APP_TAG = "TEST##";
-
+    private static boolean isDebug = BuildConfig.DEBUG;
+    private static String APP_TAG = "TEST##MusicPlayer##15";
     private static HashMap<String, String> sCachedTag = new HashMap<>();
-    private static JsonFormatter sJsonFormatter = new DefaultFormatter();
+    private static JsonFormatter sJsonFormatter = new GsonFormatter();
 
     private LogUtils() {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + " cannot be instantiated");
@@ -28,19 +32,28 @@ public class LogUtils {
     }
 
     public static void d(String message) {
-        Log.d(buildTag(APP_TAG), buildMessage(message));
+        if(isDebug){
+            Log.d(buildTag(APP_TAG), buildMessage(message));
+        }
     }
 
     public static void w(String message) {
-        Log.w(buildTag(APP_TAG), buildMessage(message));
+        if(isDebug){
+            Log.w(buildTag(APP_TAG), buildMessage(message));
+
+        }
     }
 
     public static void e(String message) {
-        Log.e(buildTag(APP_TAG), buildMessage(message));
+        if(isDebug){
+            Log.e(buildTag(APP_TAG), buildMessage(message));
+        }
     }
 
     public static void v(String message) {
-        Log.v(buildTag(APP_TAG), buildMessage(message));
+        if(isDebug){
+            Log.v(buildTag(APP_TAG), buildMessage(message));
+        }
     }
 
     public static void wtf(String message) {
@@ -52,23 +65,33 @@ public class LogUtils {
     }
 
     public static void i(@NonNull String tag, String message) {
-        Log.i(buildTag(tag), buildMessage(message));
+        if(isDebug){
+            Log.i(buildTag(tag), buildMessage(message));
+        }
     }
 
     public static void d(@NonNull String tag, String message) {
-        Log.d(buildTag(tag), buildMessage(message));
+        if(isDebug){
+            Log.d(buildTag(tag), buildMessage(message));
+        }
     }
 
     public static void w(@NonNull String tag, String message) {
-        Log.w(buildTag(tag), buildMessage(message));
+        if(isDebug){
+            Log.w(buildTag(tag), buildMessage(message));
+        }
     }
 
     public static void e(@NonNull String tag, String message) {
-        Log.e(buildTag(tag), buildMessage(message));
+        if(isDebug){
+            Log.e(buildTag(tag), buildMessage(message));
+        }
     }
 
     public static void v(@NonNull String tag, String message) {
-        Log.v(buildTag(tag), buildMessage(message));
+        if(isDebug){
+            Log.v(buildTag(tag), buildMessage(message));
+        }
     }
 
     public static void wtf(@NonNull String tag, String message) {
@@ -131,4 +154,20 @@ public class LogUtils {
             return content;
         }
     }
+
+    /**
+     * 需要Gson依赖支持
+     */
+    private static class GsonFormatter implements LogUtils.JsonFormatter {
+        @Override
+        public String formatJson(String content) {
+//            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//            JsonParser parser = new JsonParser();
+//            JsonElement element = parser.parse(content);
+//            return gson.toJson(element);
+
+            return content;
+        }
+    }
+
 }

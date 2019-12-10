@@ -1,5 +1,7 @@
 package androidalldemo.jan.jason.bluedemo.adapter;
 
+import android.bluetooth.BluetoothDevice;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -16,15 +18,16 @@ import androidalldemo.jan.jason.bluedemo.bean.BlueBean;
  */
 public class BlueConnectAdapter extends BaseQuickAdapter<BlueBean,BaseViewHolder> {
 
-    public BlueConnectAdapter(List<BlueBean> datas){
-        super(R.layout.item_blue_adapter, datas);
+    public BlueConnectAdapter(){
+        super(R.layout.item_blue_adapter);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, BlueBean item) {
 
         helper.setText(R.id.iba_tv_name, "name = "+item.getName())
-                .setText(R.id.iba_tv_address, "address = "+item.getAddress());
+                .setText(R.id.iba_tv_address, "address = \n"+item.getAddress() +
+                        (item.getBondState() == BluetoothDevice.BOND_BONDED ? "\n(已配对)" : "\n未配对"));
 
     }
 }

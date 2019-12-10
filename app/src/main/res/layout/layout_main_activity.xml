@@ -5,6 +5,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -12,14 +13,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:background="?android:attr/selectableItemBackground"
             tools:context=".MainActivity">
 
             <Button
                 android:id="@+id/lma_test_api_tv"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:textColor="@color/colorPrimary"
+                android:background="@drawable/btn_selector_style"
+                android:textColor="@color/white"
                 android:layout_margin="10dp"
                 android:text="测试基本API"
                 android:textSize="20sp"
@@ -30,8 +32,8 @@
                 android:id="@+id/lma_normal_blue_tv"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:textColor="@color/colorPrimary"
-                android:background="?android:attr/selectableItemBackground"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_selector_style"
                 android:layout_margin="10dp"
                 android:text="经典蓝牙demo"
                 android:textSize="20sp"
@@ -41,8 +43,8 @@
                 android:id="@+id/lma_ble_blue_tv"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:textColor="@color/colorPrimary"
-                android:background="?android:attr/selectableItemBackground"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_selector_style"
                 android:layout_margin="10dp"
                 android:text="BLE蓝牙demo"
                 android:textSize="20sp"

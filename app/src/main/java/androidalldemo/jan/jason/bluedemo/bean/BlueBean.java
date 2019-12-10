@@ -1,5 +1,7 @@
 package androidalldemo.jan.jason.bluedemo.bean;
 
+import android.bluetooth.BluetoothDevice;
+
 /**
  * Description: 连接蓝牙需要用的实体
  * *
@@ -11,6 +13,14 @@ public class BlueBean {
     private String name;
 
     private String address;
+    /**
+     * 配对状态
+     */
+    private int bondState;
+    /**
+     * 当前蓝牙设备
+     */
+    private BluetoothDevice device;
 
     public BlueBean() {
     }
@@ -18,6 +28,35 @@ public class BlueBean {
     public BlueBean(String name, String address) {
         this.name = name;
         this.address = address;
+    }
+
+    public BlueBean(String name, String address, int bondState) {
+        this.name = name;
+        this.address = address;
+        this.bondState = bondState;
+    }
+
+    public BlueBean(String name, String address, int bondState, BluetoothDevice device) {
+        this.name = name;
+        this.address = address;
+        this.bondState = bondState;
+        this.device = device;
+    }
+
+    public BluetoothDevice getDevice() {
+        return device;
+    }
+
+    public void setDevice(BluetoothDevice device) {
+        this.device = device;
+    }
+
+    public int getBondState() {
+        return bondState;
+    }
+
+    public void setBondState(int bondState) {
+        this.bondState = bondState;
     }
 
     public String getName() {

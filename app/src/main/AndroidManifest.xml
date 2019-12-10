@@ -9,12 +9,15 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/blue_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.BleBlueActivity"></activity>
+        <activity android:name=".ui.BleServerActivity"></activity>
+        <activity android:name=".ui.BleClientActivity" />
+        <activity android:name=".ui.NormalServerActivity" />
+        <activity android:name=".ui.NormalClientActivity" />
+        <activity android:name=".ui.BleBlueActivity" />
         <activity android:name=".ui.NormalBlueActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -25,6 +28,5 @@
         </activity>
         <activity android:name=".ui.TestAPIActivity" />
     </application>
-
 
 </manifest>

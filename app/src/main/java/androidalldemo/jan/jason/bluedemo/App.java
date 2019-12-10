@@ -14,31 +14,25 @@ import android.widget.Toast;
 public class App extends Application {
 
     /**
+     * 入口 实例，给别的地方用
+     */
+    private static App instance;
+
+    /**
      * 全局句柄
      */
     private static final Handler sHandler = new Handler();
 
-    /**
-     * 全局Toast
-     */
-    private static Toast sToast; // 单例Toast,避免重复创建，显示时间过长
 
     @SuppressLint("ShowToast")
     @Override
     public void onCreate() {
         super.onCreate();
-        sToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+        instance = this;
     }
 
-    /**
-     * 展示一个吐司
-     * @param txt
-     * @param isShort 是否是一个短的吐司
-     */
-    public static void toast(String txt, boolean isShort) {
-        sToast.setText(txt);
-        sToast.setDuration(isShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG);
-        sToast.show();
+    public static App getInstance() {
+        return instance;
     }
 
     /**

@@ -25,7 +25,7 @@
             android:id="@+id/abb_client_btn"
             android:text="点击进入BLE蓝牙的客户端"
             android:layout_margin="20dp"
-            android:background="#CCEEE8E8"
+            android:background="@drawable/btn_selector_style"
             android:layout_width="match_parent"
             android:layout_height="60dp"/>
 
@@ -33,7 +33,7 @@
             android:id="@+id/abb_server_btn"
             android:text="点击进入BLE蓝牙的服务端"
             android:layout_margin="20dp"
-            android:background="#CCEEE8E8"
+            android:background="@drawable/btn_selector_style"
             android:layout_width="match_parent"
             android:layout_height="60dp"/>
 
