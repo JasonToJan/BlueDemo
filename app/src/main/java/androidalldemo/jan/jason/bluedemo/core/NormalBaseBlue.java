@@ -3,6 +3,7 @@ package androidalldemo.jan.jason.bluedemo.core;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -105,6 +106,7 @@ public class NormalBaseBlue {
             isRead = true;//开始读取信息,可能是文件，也可能是字符串
             while (isRead) {
 
+                LogUtils.d("TEST##"," while 内部...");
                 switch (remoteInputStream.readInt()) {
 
                     case FLAG_MSG: //读取短消息

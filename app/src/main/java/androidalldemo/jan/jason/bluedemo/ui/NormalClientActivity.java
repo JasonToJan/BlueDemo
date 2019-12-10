@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.cxz.swipelibrary.SwipeBackActivity;
+
+import java.io.File;
 
 import androidalldemo.jan.jason.bluedemo.R;
 import androidalldemo.jan.jason.bluedemo.adapter.BlueConnectAdapter;
@@ -82,6 +85,15 @@ public class NormalClientActivity extends SwipeBackActivity implements
             case R.id.anc_client_scan :
                 scanBluetooth();
                 break;
+
+            case R.id.ism_send_msg_btn:
+                sendMessageToServer();
+                break;
+
+            case R.id.ism_input_file_btn:
+                sendFileDataToServer();
+                break;
+
         }
     }
 
@@ -118,6 +130,8 @@ public class NormalClientActivity extends SwipeBackActivity implements
      */
     private void initView(){
         binding.ancClientScan.setOnClickListener(this);
+        binding.ancInclude.ismSendMsgBtn.setOnClickListener(this);
+        binding.ancInclude.ismInputFileBtn.setOnClickListener(this);
     }
 
     /**
@@ -172,7 +186,7 @@ public class NormalClientActivity extends SwipeBackActivity implements
                 }
                 mClient.connectToServer(mAdapter.getData().get(position).getDevice());
                 ToastUtils.show("正在连接...到...服务端");
-                binding.ancInclude.ismLogTv.setText("正在连接...");
+                binding.ancInclude.ismLogTv.setText("向客服小姐姐打招呼，等待客服响应");
             }
         });
     }
@@ -217,6 +231,40 @@ public class NormalClientActivity extends SwipeBackActivity implements
             }
         } else {
             mBluetoothAdapter.startDiscovery();
+        }
+    }
+
+    /**
+     * 给客服小姐姐发送消息
+     */
+    private void sendMessageToServer(){
+        if (mClient.isConnected(null)) {
+            String msg = binding.ancInclude.ismInputEt.getText().toString();
+            if (TextUtils.isEmpty(msg)) {
+                ToastUtils.show("不能给客服小姐姐发送空消息哦~");
+            } else {
+                mClient.sendMessage(msg);//给客服小姐姐发消息
+            }
+        } else {
+            ToastUtils.show("sorry, 此时没有有效连接~");
+            binding.ancConnectStateTv.setText("哎呀，和客服小姐姐断线了，不知道是自己这边的问题还是她那边的问题");
+        }
+    }
+
+    /**
+     * 给客服小姐姐发送文件
+     */
+    private void sendFileDataToServer(){
+        if (mClient.isConnected(null)) {
+            String filePath = binding.ancInclude.ismInputFileEt.getText().toString();
+            if (TextUtils.isEmpty(filePath) || !new File(filePath).isFile()) {
+                ToastUtils.show("抱歉~ 选择文件无效哦~");
+            } else {
+                mClient.sendFileData(filePath);
+            }
+        } else {
+            ToastUtils.show("sorry, 此时没有有效连接~");
+            binding.ancConnectStateTv.setText("哎呀，和客服小姐姐断线了，不知道是自己这边的问题还是她那边的问题");
         }
     }
 
