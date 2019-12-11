@@ -257,7 +257,7 @@ public class NormalBaseBlue {
      * @param state
      * @param obj
      */
-    private void notifyUI(final int state, final Object obj) {
+    public void notifyUI(final int state, final Object obj) {
         App.runUi(new Runnable() {
             @Override
             public void run() {

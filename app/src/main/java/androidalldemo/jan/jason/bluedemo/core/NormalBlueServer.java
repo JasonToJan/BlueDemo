@@ -66,6 +66,10 @@ public class NormalBlueServer extends NormalBaseBlue{
 
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
+            if (!adapter.isEnabled()) {
+                adapter.enable();//保证不是服务端断开
+            }
+
             //法1：安全加密传输
             //mServerSocket = adapter.listenUsingRfcommWithServiceRecord(TAG, SPP_UUID); //加密传输，Android强制执行配对，弹窗显示配对码
 

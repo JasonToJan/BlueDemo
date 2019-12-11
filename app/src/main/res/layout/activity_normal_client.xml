@@ -5,6 +5,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:background="@color/colorPrimary"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/anc_root_nsv"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -12,7 +13,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:context=".ui.NormalClientActivity">
 
             <Button
@@ -34,28 +35,31 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 >
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:text="连接状态："
                     android:gravity="center"
                     android:textSize="20sp"
+                    android:layout_gravity="center"
                     />
 
                 <TextView
                     android:id="@+id/anc_connect_state_tv"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:text="未连接"
+                    android:textStyle="bold"
                     android:textColor="@color/colorAccent"
                     android:gravity="center"
                     android:textSize="20sp"
+                    android:layout_gravity="center"
                     />
 
             </LinearLayout>

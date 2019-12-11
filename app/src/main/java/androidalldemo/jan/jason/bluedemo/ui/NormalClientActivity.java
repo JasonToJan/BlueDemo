@@ -2,6 +2,7 @@ package androidalldemo.jan.jason.bluedemo.ui;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -13,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -110,11 +113,11 @@ public class NormalClientActivity extends SwipeBackActivity implements
         switch (state) {
             case NormalBaseBlue.Listener.CONNECTED:
                 BluetoothDevice dev = (BluetoothDevice) obj;
-                msg = String.format("与%s(%s)连接成功", dev.getName(), dev.getAddress());
+                msg = String.format("与%s\n(%s)\n连接成功", dev.getName(), dev.getAddress());
                 binding.ancConnectStateTv.setText(msg);
                 break;
             case NormalBaseBlue.Listener.DISCONNECTED:
-                msg = "连接断开";
+                msg = "尝试连接失败或连接断开了";
                 binding.ancConnectStateTv.setText(msg);
                 break;
             case NormalBaseBlue.Listener.MSG:
@@ -185,8 +188,8 @@ public class NormalClientActivity extends SwipeBackActivity implements
                     return;
                 }
                 mClient.connectToServer(mAdapter.getData().get(position).getDevice());
-                ToastUtils.show("正在连接...到...服务端");
-                binding.ancInclude.ismLogTv.setText("向客服小姐姐打招呼，等待客服响应");
+                //ToastUtils.show("正在连接...到...服务端");
+                binding.ancInclude.ismLogTv.append("向客服小姐姐打招呼，等待客服响应");
             }
         });
     }
@@ -244,6 +247,7 @@ public class NormalClientActivity extends SwipeBackActivity implements
                 ToastUtils.show("不能给客服小姐姐发送空消息哦~");
             } else {
                 mClient.sendMessage(msg);//给客服小姐姐发消息
+                clearEditText(binding.ancInclude.ismInputEt);
             }
         } else {
             ToastUtils.show("sorry, 此时没有有效连接~");
@@ -261,10 +265,29 @@ public class NormalClientActivity extends SwipeBackActivity implements
                 ToastUtils.show("抱歉~ 选择文件无效哦~");
             } else {
                 mClient.sendFileData(filePath);
+                clearEditText(binding.ancInclude.ismInputFileEt);
             }
         } else {
             ToastUtils.show("sorry, 此时没有有效连接~");
             binding.ancConnectStateTv.setText("哎呀，和客服小姐姐断线了，不知道是自己这边的问题还是她那边的问题");
+        }
+    }
+
+    /**
+     * 清空Edit中的文字
+     */
+    private void clearEditText(EditText editText){
+        if (editText != null) {
+            editText.setText("");
+        }
+
+        //隐藏键盘
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager)
+                    getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 

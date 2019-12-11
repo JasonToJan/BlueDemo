@@ -14,6 +14,8 @@ import androidalldemo.jan.jason.bluedemo.utils.Utils;
  **/
 public class NormalBlueClient extends NormalBaseBlue{
 
+    Listener listener;
+
     /**
      * 构造器传入一个监听器
      *
@@ -21,6 +23,7 @@ public class NormalBlueClient extends NormalBaseBlue{
      */
     public NormalBlueClient(Listener listener) {
         super(listener);
+        this.listener = listener;
     }
 
     /**

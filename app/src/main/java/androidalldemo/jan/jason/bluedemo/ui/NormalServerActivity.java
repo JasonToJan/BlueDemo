@@ -1,10 +1,15 @@
 package androidalldemo.jan.jason.bluedemo.ui;
 
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidalldemo.jan.jason.bluedemo.core.NormalBaseBlue;
 import androidalldemo.jan.jason.bluedemo.core.NormalBlueServer;
@@ -25,7 +30,7 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
     , View.OnClickListener{
 
     private ActivityNormalServerBinding binding;
-
+    private BluetoothAdapter mBluetoothAdapter;
     private NormalBlueServer mServer;
 
     @Override
@@ -56,6 +61,18 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
             case R.id.ism_input_file_btn:
                 sendFileData();
                 break;
+
+            case R.id.ans_open_blue_btn:
+                if (!mBluetoothAdapter.isEnabled()) {
+                    mBluetoothAdapter.enable();//务必先打开一下
+                } else {
+                    mBluetoothAdapter.disable();//反之关一下
+                }
+                break;
+
+            case R.id.ans_enable_discovery_btn:
+                enableDdiscovery(300);
+                break;
         }
     }
 
@@ -73,13 +90,15 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
         switch (state) {
             case NormalBaseBlue.Listener.CONNECTED:
                 BluetoothDevice dev = (BluetoothDevice) obj;
-                msg = String.format("与%s(%s)连接成功", dev.getName(), dev.getAddress());
+                msg = String.format("与%s\n(%s)\n连接成功", dev.getName(), dev.getAddress());
                 binding.ansConnectStateTv.setText(msg);
                 break;
             case NormalBaseBlue.Listener.DISCONNECTED:
-                mServer.listenClient();
-                msg = "连接断开,正在重新监听...";
+                msg = "连接断开了，原因：\n 1.客户端蓝牙断开 \n2.服务端蓝牙断开 \n如果是客户端蓝牙断开需要重新监听";
                 binding.ansConnectStateTv.setText(msg);
+                if (mBluetoothAdapter.isEnabled()) {
+                    mServer.listenClient();
+                }
                 break;
             case NormalBaseBlue.Listener.MSG:
                 msg = String.format("\n%s", obj);
@@ -94,6 +113,9 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
     private void initView() {
         binding.ansIncludeSend.ismSendMsgBtn.setOnClickListener(this);
         binding.ansIncludeSend.ismInputFileBtn.setOnClickListener(this);
+
+        binding.ansOpenBlueBtn.setOnClickListener(this);
+        binding.ansEnableDiscoveryBtn.setOnClickListener(this);
     }
 
     /**
@@ -101,6 +123,9 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
      */
     private void initData() {
         setTitle("普通蓝牙 服务端");
+        if (mBluetoothAdapter == null) {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        }
 
         mServer = new NormalBlueServer(this);
         //这里立马会开启一个监听，类似于淘宝的客服一样，随时在线，随时解决用户需求
@@ -109,6 +134,19 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
         //如果要实现互相通讯，就应该找的目标对象，然后我们在手机上输入一些文字或图片，点击发送，前提一定是先找的目标对象
         //socket也一样，都是先getRemoteDevices，获取到远程设备，然后再互相发送消息
 
+    }
+
+    /**
+     * 服务端使自己的蓝牙能够被检测
+     * @param duration_second
+     */
+    private void enableDdiscovery(int duration_second) {
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+
+        // 第二个参数可设置的范围是0~3600秒，在此时间区间（窗口期）内可被发现
+        // 任何不在此区间的值都将被自动设置成120秒。
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, duration_second);
+        startActivity(discoverableIntent);
     }
 
     /**
@@ -123,6 +161,8 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
                 ToastUtils.show("不能给客户发空消息哦~");
             } else {
                 mServer.sendMessage(msg);
+                //清空EditText中的消息，再键盘隐藏掉
+                clearEditText(binding.ansIncludeSend.ismInputEt);
             }
         } else {
             ToastUtils.show("服务端(客服小姐姐)：根本没有人联系我呀，或者之前联系的用户断线了~ 但是我还是会保持监听状态的哦~");
@@ -141,10 +181,30 @@ public class NormalServerActivity extends SwipeBackActivity implements NormalBas
                 ToastUtils.show("抱歉~ 选择文件无效哦~");
             } else {
                 mServer.sendFileData(filePath);
+                //清空EditText中的消息，再键盘隐藏掉
+                clearEditText(binding.ansIncludeSend.ismInputFileEt);
             }
         } else {
             ToastUtils.show("服务端(客服小姐姐)：根本没有人联系我呀，或者之前联系的用户断线了~ 但是我还是会保持监听状态的哦~");
             binding.ansConnectStateTv.setText("没有人联系我(此时依旧在监听)");
+        }
+    }
+
+    /**
+     * 清空Edit中的文字
+     */
+    private void clearEditText(EditText editText){
+        if (editText != null) {
+            editText.setText("");
+        }
+
+        //隐藏键盘
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager)
+                    getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
