@@ -8,9 +8,45 @@
         android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.BleServerActivity">
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="服务端日志记录"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@drawable/style_bg_stroke">
+
+            <TextView
+                android:id="@+id/abs_server_log_tv"
+                android:text="Log"
+                android:padding="5dp"
+                android:layout_gravity="left"
+                android:layout_margin="10dp"
+                android:textColor="@color/theme06_gradient2"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                >
+
+            </TextView>
+
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
+
 
 </layout>

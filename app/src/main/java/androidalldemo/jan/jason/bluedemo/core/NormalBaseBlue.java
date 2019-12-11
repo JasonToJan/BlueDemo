@@ -83,6 +83,10 @@ public class NormalBaseBlue {
 
      /**
      * 死循环读取socket 里面的数据
+      * 这个函数就类似 我们一直打开水龙头 等待水的到来
+      * 如果没有水，我们也打开了水龙头也无所谓的，基本不会耗费资源
+      * 只有有水的时候，才开始 消耗水资源，也就是开始读数据了
+      * 这个socket其实就是水龙头的意思。 BluetoothSocket就是水龙头，个人理解。
      * @param socket 目标socket 如果当前应用为客户端，这里就应该是服务端的socket
      *               如果当前应用为服务端，这里就应该是客户端的socket
      */
@@ -94,22 +98,32 @@ public class NormalBaseBlue {
         try{
 
             if (!mSocket.isConnected()) {
-                mSocket.connect(); //确保当前socket处于连接状态，这里很有可能抛出异常
+                mSocket.connect(); //确保当前socket处于连接状态，这里很有可能抛出异常，这个是保证水管没有坏，就是说水可以正常流通
+                //保证自己这边的水龙头处于打开状态，就是connect状态
             }
 
             //如果没有发生异常，说明连接成功，继续往下走了,这里通知UI ，连接成功后，这里可以通过socket获取到远程设备的信息
+            //我这边水龙头已经打开了，你发不发水就不关我的事了
             notifyUI(Listener.CONNECTED, mSocket.getRemoteDevice());
 
+            //我们需要读什么呢？读，我们这边，别人给水龙头注入的水资源，也就是我们这边的输入流数据，就是别人给我们的传入的数据
             mOut = new DataOutputStream(mSocket.getOutputStream());//将远程socket的输出流包装进本类的out流中
+            //我们这边的输出流，就是我们这边的水资源向别的地方输出，先保存一下，我们每次发送数据都要拿这个输出流来发才行
+
             DataInputStream remoteInputStream = new DataInputStream(mSocket.getInputStream());//包装远程socket的输入流
 
             isRead = true;//开始读取信息,可能是文件，也可能是字符串
-            while (isRead) {
+            LogUtils.d("TEST##"," while 外部...");
+            while (isRead) {//这个while死循环相当于保安的作用，有人来，赶紧通知往下走，没人来就摸鱼，太皮了吧。
 
-                LogUtils.d("TEST##"," while 内部...");
+                LogUtils.d("TEST##"," while 内部...begin");
+                //成功建立连接后，会卡在这里readInt方法中，就是类似于这里是一个观察者，有消息来后，才会触发这里继续往下走
+                //类似于 水管两边都打开了，但是没有水，只能干瞪眼，就是说水管一直在等待水，但其实不消耗资源，因为水不存在，就谈不上浪费资源，而且系统也不会卡
+                //这里类似一个 监听器的作用，有水的时候，socket触发它进行read. 没水的时候，各玩各的。
+                //这里有点像一个 保安，有人来的时候，赶紧通知董事长，然后它马上继续等人，有人来，再通知，马上继续等...
                 switch (remoteInputStream.readInt()) {
-
                     case FLAG_MSG: //读取短消息
+                        LogUtils.d("接收短消息");
                         String msg = remoteInputStream.readUTF();
                         notifyUI(Listener.MSG, "接收短消息：" + msg);
                         break;
@@ -142,6 +156,7 @@ public class NormalBaseBlue {
 
                         break;
                 }
+                LogUtils.d("TEST##"," while 内部...end");
             }
 
 

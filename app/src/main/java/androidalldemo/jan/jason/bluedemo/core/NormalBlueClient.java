@@ -35,7 +35,8 @@ public class NormalBlueClient extends NormalBaseBlue{
         close();//确保之前的连接先断开
 
         try{
-            //加密传输，Android系统强制配对，弹窗显示配对码
+            //加密传输，Android系统强制配对，弹窗显示配对码   注意：dev是客户端自己查找，然后系统广播发过来的一个序列号的一个类对象为dev
+            //然后，我们就可以根据广播发过来的这个类来创建 一个蓝牙socket，类似本地 对应 一个水管，这个水管直接通向了目标服务端 的一个水管头。
             final BluetoothSocket socket = dev.createRfcommSocketToServiceRecord(SPP_UUID);
             //明文传输(不安全)，无需配对
             //final BluetoothSocket socket = dev.createInsecureRfcommSocketToServiceRecord(SPP_UUID);

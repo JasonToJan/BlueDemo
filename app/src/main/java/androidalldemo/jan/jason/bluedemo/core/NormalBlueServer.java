@@ -3,9 +3,7 @@ package androidalldemo.jan.jason.bluedemo.core;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.util.Log;
 
-import androidalldemo.jan.jason.bluedemo.utils.LogUtils;
 import androidalldemo.jan.jason.bluedemo.utils.Utils;
 
 import static androidalldemo.jan.jason.bluedemo.utils.LogUtils.d;
@@ -86,8 +84,12 @@ public class NormalBlueServer extends NormalBaseBlue{
                         //一旦accept走完，说明服务端已经监听到了客户端的请求连接
                         d("TEST##","服务端socket 发现有客户端请求，不再阻塞，开始向下执行逻辑...");
                         mServerSocket.close();//此时立马关闭服务端socket,不再监听其他客户端的请求了，这里自由处理，这里为了简单，就1对1，所以关闭了监听
+                        //这个ServerSocket，其实可以不把它理解成socket，而是一个工具，用来听单的工具，类似美团外卖点击听单的一个软件吧。
 
-                        loopRead(socket);//
+                        loopRead(socket);//当有客户要订单的时候，开始读订单信息，而且这个客户有接下来的需求，也是通过这个socket来传递需求的，
+                        // 服务端也可以通过这个socket来发送自己的消息 这个听单软件 可以打开店家的自己的水龙头，这个水龙头直接连接到客户的水龙头
+                        // 可以这样思考，首先店家用一个听单软件，突然有可客户订单了，然后这时候，店家有一个传声水管，直接连接到客户处，这时候客户可以通过
+                        // 这个传声水管 直接 跟店家交流，店家也可以通过这个传声水管来跟客户交流。
 
                     } catch (Throwable e) {
                         d("Error", "##" + e.getMessage());
