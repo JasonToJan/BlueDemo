@@ -29,8 +29,8 @@ import com.cxz.swipelibrary.SwipeBackActivity;
 import java.io.File;
 
 import androidalldemo.jan.jason.bluedemo.R;
-import androidalldemo.jan.jason.bluedemo.adapter.BlueConnectAdapter;
-import androidalldemo.jan.jason.bluedemo.bean.BlueBean;
+import androidalldemo.jan.jason.bluedemo.adapter.BlueNormalConnectAdapter;
+import androidalldemo.jan.jason.bluedemo.bean.BlueNormalBean;
 import androidalldemo.jan.jason.bluedemo.core.NormalBaseBlue;
 import androidalldemo.jan.jason.bluedemo.core.NormalBlueClient;
 import androidalldemo.jan.jason.bluedemo.databinding.ActivityNormalClientBinding;
@@ -47,7 +47,7 @@ public class NormalClientActivity extends SwipeBackActivity implements
 
     private ActivityNormalClientBinding binding;
     private BluetoothAdapter mBluetoothAdapter;
-    private BlueConnectAdapter mAdapter;
+    private BlueNormalConnectAdapter mAdapter;
     private NormalBlueClient mClient;//自己创建的一个普通蓝牙客户端对象，处理数据连接和传递
 
     @Override
@@ -170,7 +170,7 @@ public class NormalClientActivity extends SwipeBackActivity implements
      * 初始化列表
      */
     private void initRecyclerView() {
-        mAdapter = new BlueConnectAdapter();
+        mAdapter = new BlueNormalConnectAdapter();
 
         binding.ancClientBluelistRv.setLayoutManager(new LinearLayoutManager(this));
         binding.ancClientBluelistRv.setAdapter(mAdapter);
@@ -312,7 +312,7 @@ public class NormalClientActivity extends SwipeBackActivity implements
 
                 case BluetoothDevice.ACTION_FOUND:
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    BlueBean bean = new BlueBean(device.getName(), device.getAddress(), device.getBondState(), device);
+                    BlueNormalBean bean = new BlueNormalBean(device.getName(), device.getAddress(), device.getBondState(), device);
                     if (mAdapter != null) {
                         if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                             mAdapter.addData(bean);//适配器

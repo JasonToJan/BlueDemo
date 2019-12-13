@@ -14,7 +14,7 @@ import androidalldemo.jan.jason.bluedemo.BuildConfig;
 public class LogUtils {
 
     private static boolean isDebug = BuildConfig.DEBUG;
-    private static String APP_TAG = "TEST##MusicPlayer##15";
+    private static String APP_TAG = "TEST##BlueDemo";
     private static HashMap<String, String> sCachedTag = new HashMap<>();
     private static JsonFormatter sJsonFormatter = new GsonFormatter();
 

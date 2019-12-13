@@ -10,6 +10,121 @@
         android:layout_height="match_parent"
         tools:context=".ui.BleClientActivity">
 
+        <Button
+            android:id="@+id/abc_scan_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_selector_style"
+            android:layout_margin="10dp"
+            android:text="重新扫描"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/abc_ble_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/abc_request_read_btn"
+                android:layout_margin="8dp"
+                android:background="@drawable/btn_selector_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="请求读Character"
+                />
+
+            <Button
+                android:id="@+id/abc_request_write_btn"
+                android:layout_margin="8dp"
+                android:background="@drawable/btn_selector_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="请求写Character"
+                />
+
+            <EditText
+                android:id="@+id/abc_request_write_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="好想写点什么"
+                android:inputType="none"
+                android:maxLength="20"
+                android:layout_gravity="bottom"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/abc_request_read_notify_btn"
+                android:layout_margin="8dp"
+                android:background="@drawable/btn_selector_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="请求读Descriptor"
+                />
+
+            <Button
+                android:id="@+id/abc_request_write_notify_btn"
+                android:layout_margin="8dp"
+                android:background="@drawable/btn_selector_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="请求写Descriptor"
+                />
+
+            <EditText
+                android:id="@+id/abc_request_write_notify_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="好想写点什么"
+                android:inputType="none"
+                android:maxLength="20"
+                android:layout_gravity="bottom"
+                />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="200dp"
+            >
+
+            <TextView
+                android:id="@+id/abc_client_log_tv"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LOG:\n\n"
+                android:textColor="@color/colorAccent"
+                />
+
+        </ScrollView>
+
     </LinearLayout>
 
 </layout>

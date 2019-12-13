@@ -32,8 +32,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import androidalldemo.jan.jason.bluedemo.R;
-import androidalldemo.jan.jason.bluedemo.adapter.BlueConnectAdapter;
-import androidalldemo.jan.jason.bluedemo.bean.BlueBean;
+import androidalldemo.jan.jason.bluedemo.adapter.BlueNormalConnectAdapter;
+import androidalldemo.jan.jason.bluedemo.bean.BlueNormalBean;
 import androidalldemo.jan.jason.bluedemo.databinding.LayoutTestApiActivityBinding;
 import androidalldemo.jan.jason.bluedemo.utils.BlueUtils;
 import androidalldemo.jan.jason.bluedemo.utils.ToastUtils;
@@ -45,7 +45,7 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
     private BluetoothAdapter mBluetoothAdapter;
     private static final int REQUEST_ENABLE = 1;
 
-    private BlueConnectAdapter adapter;
+    private BlueNormalConnectAdapter adapter;
     private LayoutTestApiActivityBinding binding;
 
     //连接时需要用的类
@@ -169,7 +169,7 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
      * 初始化配置列表
      */
     private void initRecyclerView() {
-        adapter = new BlueConnectAdapter();
+        adapter = new BlueNormalConnectAdapter();
 
         binding.ltaaShowListRv.setLayoutManager(new LinearLayoutManager(this));
         binding.ltaaShowListRv.setAdapter(adapter);
@@ -182,7 +182,7 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //Toast.makeText(TestAPIActivity.this, "click item", Toast.LENGTH_SHORT).show();
                 try {
-                    doConnectLogic((BlueBean) adapter.getData().get(position));
+                    doConnectLogic((BlueNormalBean) adapter.getData().get(position));
                 } catch (Exception e) {
                     Log.d(TAG, "##" + e.getMessage());
                 }
@@ -194,7 +194,7 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
     /**
      * 处理连接的逻辑
      */
-    private void doConnectLogic(BlueBean bean) {
+    private void doConnectLogic(BlueNormalBean bean) {
         String address = bean.getAddress();
         if (mBluetoothAdapter == null) return ;
 
@@ -333,7 +333,7 @@ public class TestAPIActivity extends SwipeBackActivity implements View.OnClickLi
 
                 case BluetoothDevice.ACTION_FOUND:
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    BlueBean bean = new BlueBean(device.getName(), device.getAddress(), device.getBondState());
+                    BlueNormalBean bean = new BlueNormalBean(device.getName(), device.getAddress(), device.getBondState());
                     if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                         adapter.addData(bean);//适配器
                     } else {

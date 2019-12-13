@@ -8,7 +8,7 @@ import android.bluetooth.BluetoothDevice;
  * Creator: Wang
  * Date: 2019/12/8 21:21
  */
-public class BlueBean {
+public class BlueNormalBean {
 
     private String name;
 
@@ -22,21 +22,21 @@ public class BlueBean {
      */
     private BluetoothDevice device;
 
-    public BlueBean() {
+    public BlueNormalBean() {
     }
 
-    public BlueBean(String name, String address) {
+    public BlueNormalBean(String name, String address) {
         this.name = name;
         this.address = address;
     }
 
-    public BlueBean(String name, String address, int bondState) {
+    public BlueNormalBean(String name, String address, int bondState) {
         this.name = name;
         this.address = address;
         this.bondState = bondState;
     }
 
-    public BlueBean(String name, String address, int bondState, BluetoothDevice device) {
+    public BlueNormalBean(String name, String address, int bondState, BluetoothDevice device) {
         this.name = name;
         this.address = address;
         this.bondState = bondState;
