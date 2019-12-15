@@ -28,6 +28,8 @@ import androidalldemo.jan.jason.bluedemo.databinding.ActivityBleServerBinding;
 import androidalldemo.jan.jason.bluedemo.utils.LogUtils;
 import androidx.databinding.DataBindingUtil;
 
+import static androidalldemo.jan.jason.bluedemo.utils.LogUtils.d;
+
 /**
  * Ble 蓝牙 服务端
  */
@@ -57,8 +59,16 @@ public class BleServerActivity extends SwipeBackActivity {
     private void initData() {
         setTitle("BLE 蓝牙 服务端");
 
+        enableBlueAdapter();
         startAbvertise();//启动广播雷达死亡射线
         startGattService();//启动BLE服务端
+    }
+
+    /**
+     * 开启蓝牙
+     */
+    private void enableBlueAdapter(){
+
     }
 
     /**
@@ -91,9 +101,14 @@ public class BleServerActivity extends SwipeBackActivity {
                 .build();
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        mBluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();//广播发布者
-        mBluetoothLeAdvertiser.startAdvertising(settings,advertiseData,scanResponse,mAdvertiseCallback);
+        if (!bluetoothAdapter.isEnabled()) {
+            bluetoothAdapter.enable();//务必先打开一下
+        }
 
+        mBluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();//广播发布者
+        if (mBluetoothLeAdvertiser != null) {
+            mBluetoothLeAdvertiser.startAdvertising(settings,advertiseData,scanResponse,mAdvertiseCallback);
+        }
         //默认的蓝牙适配器通过Advertiser开广播
     }
 
@@ -130,7 +145,11 @@ public class BleServerActivity extends SwipeBackActivity {
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager != null) {
             mBluetoothGattServer = bluetoothManager.openGattServer(this,mBluetoothGattServerCallback);
-            mBluetoothGattServer.addService(service);//addService方式来增加服务
+            try {
+                mBluetoothGattServer.addService(service);//addService方式来增加服务
+            } catch (Throwable e) {
+                d("Error", "##" + e.getMessage());
+            }
         }
     }
 

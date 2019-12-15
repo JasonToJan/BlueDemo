@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.ScanResult;
 
 import java.util.Objects;
-
 import androidx.annotation.Nullable;
 
 /**
