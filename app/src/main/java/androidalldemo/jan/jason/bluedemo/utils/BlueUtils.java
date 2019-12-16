@@ -1,9 +1,13 @@
 package androidalldemo.jan.jason.bluedemo.utils;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.content.Context;
 import android.util.Log;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static androidalldemo.jan.jason.bluedemo.utils.LogUtils.d;
@@ -145,5 +149,25 @@ public class BlueUtils {
         } catch (Throwable e) {
             d("Error", "##" + e.getMessage());
         }
-    }  
+    }
+
+    /**
+     * BLE 客户端 连接服务端 反射实现
+     * @param device
+     * @param gattCallback
+     * @return
+     */
+    public static BluetoothGatt connectToBleService(Context context,BluetoothDevice device,BluetoothGattCallback gattCallback) {
+        try {
+            Method m = device.getClass().getDeclaredMethod("connectGatt", Context.class, boolean.class,
+                    BluetoothGattCallback.class, int.class);
+
+            int transport = device.getClass().getDeclaredField("TRANSPORT_LE").getInt(null);
+            return (BluetoothGatt) m.invoke(device, context, false, gattCallback, transport);
+
+        } catch (Throwable e) {
+            LogUtils.d("TEST##",e.getMessage());
+            return null;
+        }
+    }
 } 

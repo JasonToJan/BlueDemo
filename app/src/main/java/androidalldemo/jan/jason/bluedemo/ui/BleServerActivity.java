@@ -13,19 +13,26 @@ import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
 
 import com.cxz.swipelibrary.SwipeBackActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.UUID;
 
 import androidalldemo.jan.jason.bluedemo.R;
 import androidalldemo.jan.jason.bluedemo.databinding.ActivityBleServerBinding;
 import androidalldemo.jan.jason.bluedemo.utils.LogUtils;
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import static androidalldemo.jan.jason.bluedemo.utils.LogUtils.d;
@@ -44,6 +51,9 @@ public class BleServerActivity extends SwipeBackActivity {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeAdvertiser mBluetoothLeAdvertiser; // BLE广播
     private BluetoothGattServer mBluetoothGattServer; // BLE服务端
+    private MyHandler myHandler;
+    private BlueToothValueReceiver blueToothValueReceiver;
+    private boolean shouldStartServiceInReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +63,60 @@ public class BleServerActivity extends SwipeBackActivity {
         initData();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(blueToothValueReceiver);
+        } catch (Throwable e) {
+            d("Error", "##" + e.getMessage());
+        }
+        if (myHandler != null) {
+            myHandler.removeCallbacksAndMessages(null);
+            myHandler = null;
+        }
+    }
+
     /**
      * 初始化数据
      */
     private void initData() {
         setTitle("BLE 蓝牙 服务端");
+        myHandler = new MyHandler(this);
+        initReceiver();
 
-        enableBlueAdapter();
-        startAbvertise();//启动广播雷达死亡射线
-        startGattService();//启动BLE服务端
+        if (enbleBlueAdapter()){
+            startAbvertise();//启动广播雷达死亡射线
+            startGattService();//启动BLE服务端
+        } else {
+            shouldStartServiceInReceiver = true;
+        }
     }
 
     /**
-     * 开启蓝牙
+     * 注册广播接收器
      */
-    private void enableBlueAdapter(){
-
+    private void initReceiver(){
+        //注册广播，蓝牙状态监听
+        blueToothValueReceiver = new BlueToothValueReceiver();
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(blueToothValueReceiver, filter);
     }
+
+    /**
+     * 开启一下蓝牙
+     * 返回：当前是否开启了
+     */
+    private boolean enbleBlueAdapter(){
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            bluetoothAdapter.enable();//务必先打开一下
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     /**
      * 启动死亡射线，这样别的手机能够发现我们
@@ -100,10 +147,6 @@ public class BleServerActivity extends SwipeBackActivity {
                 .addServiceUuid(new ParcelUuid(UUID_SERVICE)) //服务的UUID
                 .build();
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
-            bluetoothAdapter.enable();//务必先打开一下
-        }
 
         mBluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();//广播发布者
         if (mBluetoothLeAdvertiser != null) {
@@ -148,6 +191,7 @@ public class BleServerActivity extends SwipeBackActivity {
             try {
                 mBluetoothGattServer.addService(service);//addService方式来增加服务
             } catch (Throwable e) {
+                //这里异常的原因：蓝牙未成功开启
                 d("Error", "##" + e.getMessage());
             }
         }
@@ -268,4 +312,57 @@ public class BleServerActivity extends SwipeBackActivity {
             LogUtils.i(String.format("onMtuChanged:%s,%s,%s", device.getName(), device.getAddress(), mtu));
         }
     };
+
+    /**
+     * 广播监听蓝牙状态
+     */
+    public class BlueToothValueReceiver extends BroadcastReceiver {
+        public int DEFAULT_VALUE_BULUETOOTH = 1000;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, DEFAULT_VALUE_BULUETOOTH);
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                        d("蓝牙已关闭");
+                        shouldStartServiceInReceiver = true;//下次连接到了自动重连
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        d("蓝牙已打开");
+                        if (shouldStartServiceInReceiver) {
+                            shouldStartServiceInReceiver = false;
+                            startAbvertise();//启动广播雷达死亡射线
+                            startGattService();//启动BLE服务端
+                        }
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        d("正在打开蓝牙");
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        d("正在关闭蓝牙");
+                        break;
+                    default:
+                        d("未知状态");
+                }
+            }
+        }
+    }
+
+    private static class MyHandler extends Handler {
+
+        WeakReference<BleServerActivity> parent;
+
+        public MyHandler(BleServerActivity activity) {
+            parent = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            if(null!=parent) {
+                BleServerActivity activity = (BleServerActivity) parent.get();
+            }
+        }
+    }
 }
