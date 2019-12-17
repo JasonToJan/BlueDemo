@@ -80,17 +80,6 @@
                 >
 
                 <Button
-                    android:id="@+id/abc_request_read_notify_btn"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/btn_selector_style"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:text="请求读Descriptor"
-                    />
-
-                <Button
                     android:id="@+id/abc_request_write_notify_btn"
                     android:layout_margin="8dp"
                     android:background="@drawable/btn_selector_style"
@@ -98,18 +87,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:text="请求写Descriptor"
+                    android:text="请求服务给自己设置通知"
                     />
 
-                <EditText
-                    android:id="@+id/abc_request_write_notify_et"
+                <Button
+                    android:id="@+id/abc_request_read_notify_btn"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/btn_selector_style"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="好想写点什么"
-                    android:inputType="none"
-                    android:maxLength="20"
-                    android:layout_gravity="bottom"
+                    android:textAllCaps="false"
+                    android:text="请求读存在的通知"
                     />
 
             </LinearLayout>

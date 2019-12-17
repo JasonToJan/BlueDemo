@@ -43,9 +43,14 @@ import static androidalldemo.jan.jason.bluedemo.utils.LogUtils.d;
 public class BleServerActivity extends SwipeBackActivity {
 
     public static final UUID UUID_SERVICE = UUID.fromString("10000000-0000-0000-0000-000000000000"); //自定义UUID
-    public static final UUID UUID_CHAR_READ_NOTIFY = UUID.fromString("11000000-0000-0000-0000-000000000000");
-    public static final UUID UUID_DESC_NOTITY = UUID.fromString("11100000-0000-0000-0000-000000000000");
-    public static final UUID UUID_CHAR_WRITE = UUID.fromString("12000000-0000-0000-0000-000000000000");
+    public static final UUID UUID_READ_CHAR_OR_NOTIFY = UUID.fromString("11000000-0000-0000-0000-000000000000");
+    public static final UUID UUID_WRITE_CHAR = UUID.fromString("12000000-0000-0000-0000-000000000000");//客户端想要服务端给它写东西的话，都会拿这个id
+    public static final UUID UUID_DESC_NOTIRY = UUID.fromString("14000000-0000-0000-0000-000000000000");//描述通知，通知操作，用这个UUID
+
+//    public static final UUID UUID_SERVICE = UUID.fromString("10000000-0000-0000-0000-000000000000"); //自定义UUID
+//    public static final UUID UUID_CHAR_READ_NOTIFY = UUID.fromString("11000000-0000-0000-0000-000000000000");
+//    public static final UUID UUID_DESC_NOTITY = UUID.fromString("11100000-0000-0000-0000-000000000000");
+//    public static final UUID UUID_CHAR_WRITE = UUID.fromString("12000000-0000-0000-0000-000000000000");
 
     private ActivityBleServerBinding binding;
     private BluetoothAdapter bluetoothAdapter;
@@ -164,21 +169,23 @@ public class BleServerActivity extends SwipeBackActivity {
      */
     private void startGattService(){
 
+        //第一个UUID
         BluetoothGattService service = new BluetoothGattService(UUID_SERVICE, BluetoothGattService.SERVICE_TYPE_PRIMARY);
 
-        //配置服务属性
+        //配置服务属性+ 字符串的读 和通知的读 第二个UUID
         BluetoothGattCharacteristic characteristicRead = new BluetoothGattCharacteristic(
-                UUID_CHAR_READ_NOTIFY,
+                UUID_READ_CHAR_OR_NOTIFY,//这样字符串的读写功能没问题了
                 BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
                 BluetoothGattCharacteristic.PERMISSION_READ
         );
-        characteristicRead.addDescriptor(new BluetoothGattDescriptor(UUID_DESC_NOTITY,BluetoothGattCharacteristic.PERMISSION_WRITE));
+        //这个再加支持通知操作，支持写，通知的写 第三个UUID
+        characteristicRead.addDescriptor(new BluetoothGattDescriptor(UUID_DESC_NOTIRY,BluetoothGattCharacteristic.PERMISSION_WRITE));
 
         service.addCharacteristic(characteristicRead);
 
-        //继续配置服务属性
+        //继续配置服务属性+ 字符串的写 第四个UUID
         BluetoothGattCharacteristic characteristicWrite = new BluetoothGattCharacteristic(
-                UUID_CHAR_WRITE,
+                UUID_WRITE_CHAR,
                 BluetoothGattCharacteristic.PROPERTY_WRITE,
                 BluetoothGattCharacteristic.PERMISSION_WRITE);
 
@@ -289,6 +296,7 @@ public class BleServerActivity extends SwipeBackActivity {
                             SystemClock.sleep(3000);
                             String response = "CHAR_" + (int) (Math.random() * 100); //模拟数据
                             characteristic.setValue(response);
+                            //这里通知客户端
                             mBluetoothGattServer.notifyCharacteristicChanged(device, characteristic, false);
                             logTv("通知客户端改变Characteristic[" + characteristic.getUuid() + "]:\n" + response);
                         }

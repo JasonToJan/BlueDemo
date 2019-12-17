@@ -302,7 +302,7 @@ public class BleClientActivity extends SwipeBackActivity implements View.OnClick
         BluetoothGattService service = getGattService(BleServerActivity.UUID_SERVICE);
         if (service != null) {
             //通过UUID获取可读的Characteristic，读到的东西，在BluetoothGattCallback回调里面
-            BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_CHAR_READ_NOTIFY);
+            BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_READ_CHAR_OR_NOTIFY);
             mBluetoothGatt.readCharacteristic(characteristic);//通过调用Gatt的read方法来读取
         }
     }
@@ -317,7 +317,8 @@ public class BleClientActivity extends SwipeBackActivity implements View.OnClick
             if (!TextUtils.isEmpty(text)) {
                 //通过UUID获取可写的Characteristic
                 try {
-                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_CHAR_WRITE);
+                    //写入的话，一般需要单独开辟一个UUID专门的写
+                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_WRITE_CHAR);
                     characteristic.setValue(text.getBytes()); //单次最多20个字节
                     mBluetoothGatt.writeCharacteristic(characteristic);//调用Gatt的write方法来写入
                     binding.abcRequestWriteEt.setText("");
@@ -336,35 +337,44 @@ public class BleClientActivity extends SwipeBackActivity implements View.OnClick
      * 请求读通知
      */
     private void requestReadNotify(){
-        BluetoothGattService service = getGattService(BleServerActivity.UUID_SERVICE);
-        if (service != null) {
-            // 设置Characteristic通知
-            BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_CHAR_READ_NOTIFY);//通过UUID获取可通知的Characteristic
-            mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        try{
+            BluetoothGattService service = getGattService(BleServerActivity.UUID_SERVICE);
+            if (service != null) {
+                // 设置Characteristic通知
+                BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_READ_CHAR_OR_NOTIFY);//通过UUID获取可通知的Characteristic
+                mBluetoothGatt.setCharacteristicNotification(characteristic, true);
 
-            // 向Characteristic的Descriptor属性写入通知开关，使蓝牙设备主动向手机发送数据
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(BleServerActivity.UUID_DESC_NOTITY);
-            // descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);//和通知类似,但服务端不主动发数据,只指示客户端读取数据
-            // descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            mBluetoothGatt.readDescriptor(descriptor);
+                // 向Characteristic的Descriptor属性写入通知开关，使蓝牙设备主动向手机发送数据
+                BluetoothGattDescriptor descriptor = characteristic.getDescriptor(BleServerActivity.UUID_DESC_NOTIRY);
+                // descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);//和通知类似,但服务端不主动发数据,只指示客户端读取数据
+                // descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                mBluetoothGatt.readDescriptor(descriptor);
+            }
+        }catch (Throwable e){
+           d("","Error##"+e.getMessage());
         }
+
     }
 
     /**
      * 请求写通知
      */
     private void requestWriteNotify(){
-        BluetoothGattService service = getGattService(BleServerActivity.UUID_SERVICE);
-        if (service != null) {
-            // 设置Characteristic通知
-            BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_CHAR_READ_NOTIFY);//通过UUID获取可通知的Characteristic
-            mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        try{
+            BluetoothGattService service = getGattService(BleServerActivity.UUID_SERVICE);
+            if (service != null) {
+                // 设置Characteristic通知
+                BluetoothGattCharacteristic characteristic = service.getCharacteristic(BleServerActivity.UUID_READ_CHAR_OR_NOTIFY);//通过UUID获取可通知的Characteristic
+                mBluetoothGatt.setCharacteristicNotification(characteristic, true);
 
-            // 向Characteristic的Descriptor属性写入通知开关，使蓝牙设备主动向手机发送数据
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(BleServerActivity.UUID_DESC_NOTITY);
-            // descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);//和通知类似,但服务端不主动发数据,只指示客户端读取数据
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            mBluetoothGatt.writeDescriptor(descriptor);
+                // 向Characteristic的Descriptor属性写入通知开关，使蓝牙设备主动向手机发送数据
+                BluetoothGattDescriptor descriptor = characteristic.getDescriptor(BleServerActivity.UUID_DESC_NOTIRY);
+                // descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);//和通知类似,但服务端不主动发数据,只指示客户端读取数据
+                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                mBluetoothGatt.writeDescriptor(descriptor);
+            }
+        }catch (Throwable e){
+           d("","Error##"+e.getMessage());
         }
     }
 
